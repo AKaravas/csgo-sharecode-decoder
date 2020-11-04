@@ -1,9 +1,7 @@
 <?php
 
-
 /**
  * Class DecodeShareCode
- * @package
  */
 class DecodeShareCode
 {
@@ -47,9 +45,9 @@ class DecodeShareCode
         $portBytes = array_reverse(array_slice($bytes, 16, 2));
 
         return [
-            'matchId' =>  $getMatchId = $this->getResultFromBytes($matchIdBytes),
-            'reservationId' => $getReservationId = $this->getResultFromBytes($reservationIdBytes),
-            'tvPort' =>  $getPort = $this->getResultFromBytes($portBytes)
+            'matchId' =>  $this->getResultFromBytes($matchIdBytes),
+            'reservationId' => $this->getResultFromBytes($reservationIdBytes),
+            'tvPort' =>  $this->getResultFromBytes($portBytes)
         ];
     }
 
@@ -80,8 +78,7 @@ class DecodeShareCode
      */
     public function convertToHex(string $number): string
     {
-        $toHex = gmp_strval(gmp_init($number, 10), 16);
-
+        $toHex = gmp_strval(gmp_init($number, 10), 16);;
         return  $this->padStart($toHex, '36', '0');
 
     }
@@ -121,14 +118,19 @@ class DecodeShareCode
         $chars = array_map("chr", $bytes);
         $bin = implode($chars);
         $hex = bin2hex($bin);
-        return gmp_strval($this->gmp_hexdec($hex));
+        return gmp_strval($this->gmp_hexDec($hex));
     }
 
-    public function gmp_hexdec($n) {
+    /**
+     * @param $n
+     * @return string
+     */
+    public function gmp_hexDec($n): string
+    {
         $gmp = gmp_init(0);
-        $mult = gmp_init(1);
-        for ($i=strlen($n)-1;$i>=0;$i--,$mult=gmp_mul($mult, 16)) {
-            $gmp = gmp_add($gmp, gmp_mul($mult, hexdec($n[$i])));
+        $multi = gmp_init(1);
+        for ($i=strlen($n)-1;$i>=0;$i--,$multi=gmp_mul($multi, 16)) {
+            $gmp = gmp_add($gmp, gmp_mul($multi, hexdec($n[$i])));
         }
         return $gmp;
     }
